@@ -62,6 +62,8 @@ class TranslateFilesCommand extends Command
     {
         //Collect input
         $this->base_locale = $this->ask('What is base locale?', config('app.locale', 'en'));
+        $this->p_author = $this->ask('What is  Author ?', 'waka');
+        $this->p_plugin = $this->ask('What is  Plugin ?');
         $this->locales = array_filter(explode(",", $this->ask('What are the target locales? Comma seperate each lang key', 'tr,it')));
         $should_force = $this->choice('Force overwrite existing translations?', ['No', 'Yes'], 'No');
         $this->force = false;
@@ -80,7 +82,7 @@ class TranslateFilesCommand extends Command
             $file_translator = new JsonArrayFileTranslator($this->base_locale, $this->verbose, $this->force);
         }
         else {
-            $file_translator = new PhpArrayFileTranslator($this->base_locale, $this->verbose, $this->force);
+            $file_translator = new PhpArrayFileTranslator($this->base_locale, $this->verbose, $this->force, $this->p_plugin, $this->p_author);
             $this->target_files = array_filter(explode(",", $this->ask('Are there specific target files to translate only? ex: file1,file2', '')));
             foreach ($this->target_files as $key => $target_file) {
                 $this->target_files[$key] = $target_file;

@@ -14,12 +14,16 @@ class PhpArrayFileTranslator implements FileTranslatorContract
     private $excluded_files;
     private $verbose;
     private $force;
+    private $author;
+    private $plugin;
 
-    public function __construct($base_locale, $verbose = true, $force = false)
+    public function __construct($base_locale, $author, $plugin, $verbose = true, $force = false)
     {
         $this->base_locale = $base_locale;
         $this->verbose = $verbose;
         $this->force = $force;
+        $this->author = strtolower($author);
+        $this->plugin = strtolower($plugin);
     }
 
     public function handle($target_locale) : void
@@ -85,9 +89,10 @@ class PhpArrayFileTranslator implements FileTranslatorContract
     }
 
     private function get_language_file_address($locale, $sub_folder = null){
+        $path = plugins_path($this->author.'/'.$this->plugin.'/');
         return $sub_folder!==null ?
-            resource_path('lang/' . $locale.'/'.$sub_folder) :
-            resource_path('lang/' . $locale);
+            $path .'lang/' . $locale.'/'.$sub_folder :
+            $path .'lang/' . $locale;
     }
 
     private function strip_php_extension($filename){
